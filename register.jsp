@@ -44,17 +44,23 @@
         <h1>Train Schedule System</h1>
         <div class="center" id="rcorner">
             <fieldset class="spacing">
-                <form action="checkLoginDetails.jsp" method="post">
+                <form action="./checkRegisterDetails.jsp" method="post">
+                    <label for="firstName">First Name:</label><br>
+                    <input type="text" id="firstName" name="firstName"><br>
+                    <label for="lastName">Last Name:</label><br>
+                    <input type="text" id="lastName" name="lastName"><br>
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="email" name="email"><br>     
                     <label for="username">Username:</label><br>
                     <input type="text" id="username" name="username"><br>
                     <label for="password">Password:</label><br>
                     <input type="password" id="password" name="password"><br>
+                    <label for="confirmPassword">Confirm Password:</label><br>
+                    <input type="password" id="confirmPassword" name="confirmPassword"><br>
                     <input class="margin" type="submit" value="Submit">
                 </form>
-                <text class="margin">Don't have anaccount?</text>
-                <a href="register.jsp">Register</a><br>
-                <text class="margin">Forgot your Password?</text>
-                <a href="resetPassword.jsp">Reset Password</a><br>
+                <text class="margin">Already have an account?</text>
+                <a href="login.jsp">Go to Login</a>
             </fieldset>
         </div>
     </body>
