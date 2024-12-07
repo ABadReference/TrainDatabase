@@ -45,8 +45,8 @@
         <div class="center" id="rcorner">
             <fieldset class="spacing">
                 <form action="./checkUserDetails.jsp" method="post">
-                    <label for="email">Email:</label><br>
-                    <input type="email" id="email" name="email"><br>     
+                    <label for="ssn">SSN:</label><br>
+                    <input type="ssn" id="ssn" name="ssn"><br>     
                     <label for="username">Username:</label><br>
                     <input type="text" id="username" name="username"><br>
                     <label for="password">New Password:</label><br>

@@ -12,8 +12,8 @@ public class ApplicationDB {
     // Method to get a connection to the database
     public Connection getConnection() {
         Connection connection = null;
-        String URL = "jdbc:mysql://localhost:3306/c336project?useSSL=false";
-     
+        String URL = "jdbc:mysql://localhost:3306/cs336project?useSSL=false&allowPublicKeyRetrieval=true";
+
     try {
         // Use the old driver class for MySQL Connector 5.1.49
         Class.forName("com.mysql.jdbc.Driver");

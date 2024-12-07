@@ -51,7 +51,7 @@
                     <input type="password" id="password" name="password"><br>
                     <input class="margin" type="submit" value="Submit">
                 </form>
-                <text class="margin">Don't have anaccount?</text>
+                <text class="margin">Don't have an account?</text>
                 <a href="register.jsp">Register</a><br>
                 <text class="margin">Forgot your Password?</text>
                 <a href="resetPassword.jsp">Reset Password</a><br>

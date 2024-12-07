@@ -63,10 +63,10 @@
             color: black;
             font-size: 18px;
         }
-        .logout-button {
+        .button {
             margin-top: 20px;
         }
-        .logout-button a {
+        .button a {
             display: inline-block;
             background-color: #4285F4;
             color: #ffffff;
@@ -75,18 +75,35 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        .logout-button a:hover {
+        .button a:hover {
             background-color: #3071A9;
+        }
+        .button b {
+            display: inline-block;
+            background-color: #4285F4;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button b:hover {
+            background-color: #FF0000;
         }
     </style>
 </head>
 <body>
     <h1>Train Schedule System</h1>
     <div class="content" id="rcorner">
-        <h1>Welcome, <%= firstName %>!</h1>
-        <p>Your username is: <strong><%= username %></strong></p>
-        <div class="logout-button">
-            <a href="logout.jsp">Log Out</a>
+        <p><b>Welcome, <%= firstName %><b></p>
+        <div class="button">
+            <a href="trainView.jsp">View Trains</a>
+        </div>
+        <div class="button">
+            <a href="reservation.jsp">Make Reservation</a>
+        </div>
+        <div class="button">
+            <b href="logout.jsp">Log Out</a>
         </div>
     </div>
 </body>
