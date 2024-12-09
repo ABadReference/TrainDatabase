@@ -1,83 +1,117 @@
--- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: cs336project
--- ------------------------------------------------------
--- Server version	8.0.40
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `trains`
---
-
+-- Updated Table structure for `trains`
 DROP TABLE IF EXISTS `trains`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `trains` (
   `TrainID` char(10) NOT NULL,
   `TransitLineName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`TrainID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB;
 
---
--- Dumping data for table `trains`
---
-
-LOCK TABLES `trains` WRITE;
-/*!40000 ALTER TABLE `trains` DISABLE KEYS */;
-/*!40000 ALTER TABLE `trains` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `ssn` char(11) DEFAULT NULL,
-  `fname` varchar(255) DEFAULT NULL,
-  `lname` varchar(255) DEFAULT NULL,
+-- Updated Table structure for `customers`
+DROP TABLE IF EXISTS `customers`;
+CREATE TABLE `customers` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `fname` varchar(255) DEFAULT NULL,
+  `lname` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB;
+
+-- Updated Table structure for `employees`
+DROP TABLE IF EXISTS `employees`;
+CREATE TABLE `employees` (
+  `ssn` char(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `isAdmin` tinyint(1) DEFAULT '0',
   `isRep` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`username`,`password`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  PRIMARY KEY (`ssn`),
+  FOREIGN KEY (`username`) REFERENCES `customers`(`username`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
---
--- Dumping data for table `user`
---
+-- Updated Table structure for `stations`
+DROP TABLE IF EXISTS `stations`;
+CREATE TABLE `stations` (
+  `stationID` char(10) NOT NULL,
+  `stationName` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `location` varchar(100) DEFAULT NULL,
+  `stopNumber` int DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`stationID`),
+  CHECK (`stopNumber` >= 0)
+) ENGINE=InnoDB;
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('123-45-6789','John','Smith','j','1',0,0),('123-45-6789','Johns','Smiths','j','2',1,0),('123-45-6789','Johns','Smiths','j','3',0,1);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
+-- Updated Table structure for `schedule`
+DROP TABLE IF EXISTS `schedule`;
+CREATE TABLE `schedule` (
+  `schedule_id` int NOT NULL AUTO_INCREMENT,
+  `train_id` char(10) NOT NULL,
+  `origin` varchar(256) NOT NULL,
+  `destination` varchar(256) NOT NULL,
+  `stop_number` int DEFAULT NULL,
+  `departure_time` datetime NOT NULL,
+  `arrival_time` datetime NOT NULL,
+  `fare` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`schedule_id`),
+  FOREIGN KEY (`train_id`) REFERENCES `trains`(`TrainID`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CHECK (`fare` >= 0),
+  CHECK (`stop_number` >= 0)
+) ENGINE=InnoDB;
 
---
--- Dumping routines for database 'cs336project'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+-- Updated Table structure for `reservations`
+DROP TABLE IF EXISTS `reservations`;
+CREATE TABLE `reservations` (
+  `reservation_id` int NOT NULL AUTO_INCREMENT,
+  `date` datetime NOT NULL,
+  `passenger_id` varchar(255) NOT NULL,
+  `total_fare` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`reservation_id`),
+  FOREIGN KEY (`passenger_id`) REFERENCES `customers`(`username`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CHECK (`total_fare` >= 0)
+) ENGINE=InnoDB;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+-- Updated Table structure for `books`
+DROP TABLE IF EXISTS `books`;
+CREATE TABLE `books` (
+  `reservation_id` int NOT NULL,
+  `username` varchar(255) NOT NULL,
+  PRIMARY KEY (`reservation_id`, `username`),
+  FOREIGN KEY (`reservation_id`) REFERENCES `reservations`(`reservation_id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`username`) REFERENCES `customers`(`username`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
--- Dump completed on 2024-12-07 13:56:19
+-- Updated Table structure for `manages`
+DROP TABLE IF EXISTS `manages`;
+CREATE TABLE `manages` (
+  `schedule_id` int NOT NULL,
+  `ssn` char(11) NOT NULL,
+  PRIMARY KEY (`schedule_id`, `ssn`),
+  FOREIGN KEY (`schedule_id`) REFERENCES `schedule`(`schedule_id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`ssn`) REFERENCES `employees`(`ssn`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- Updated Table structure for `goes`
+DROP TABLE IF EXISTS `goes`;
+CREATE TABLE `goes` (
+  `schedule_id` int NOT NULL,
+  `station_id` char(10) NOT NULL,
+  `train_id` char(10) NOT NULL,
+  PRIMARY KEY (`schedule_id`, `station_id`, `train_id`),
+  FOREIGN KEY (`schedule_id`) REFERENCES `schedule`(`schedule_id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`station_id`) REFERENCES `stations`(`stationID`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`train_id`) REFERENCES `trains`(`TrainID`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- Indexes for performance
+CREATE INDEX idx_train_id ON schedule (`train_id`);
+CREATE INDEX idx_station_id ON goes (`station_id`);
+CREATE INDEX idx_schedule_id ON goes (`schedule_id`);

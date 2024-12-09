@@ -103,7 +103,7 @@
             <a href="reservation.jsp">Make Reservation</a>
         </div>
         <div class="button">
-            <b href="logout.jsp">Log Out</a>
+            <a href="logout.jsp">Log Out</a>
         </div>
     </div>
 </body>

@@ -23,7 +23,7 @@
         }
 
         // Use PreparedStatement to prevent SQL injection
-        String query = "SELECT * FROM User WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM Customers WHERE username = ? AND password = ?";
         ps = con.prepareStatement(query);
         ps.setString(1, userid);
         ps.setString(2, pwd);
@@ -33,21 +33,23 @@
 
         if (rs.next()) {
             String firstName = rs.getString("Fname");
-            boolean isAdmin = rs.getBoolean("isAdmin");
-            boolean isRep  = rs.getBoolean("isRep");
             session.setAttribute("user", userid);
             session.setAttribute("Fname", firstName);
-
-            if (isAdmin) {
-                response.sendRedirect("adminDashboard.jsp");
-            }
-            if (isRep) {
-                response.sendRedirect("repDashboard.jsp");
-            }
             response.sendRedirect("userDashboard.jsp");
         } 
         else {
-            response.sendRedirect("loginError.jsp");
+            query = "SELECT * FROM Employees WHERE username = ? AND password = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, userid);
+            ps.setString(2, pwd);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String firstName = rs.getString("Fname");
+                session.setAttribute("user", userid);
+                session.setAttribute("Fname", firstName);
+                response.sendRedirect("adminDashboard.jsp");
+            } else { response.sendRedirect("loginError.jsp"); }  
         }
     } catch (Exception e) {
 

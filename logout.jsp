@@ -16,10 +16,12 @@
     // Invalidate the current session to log the user out
     session.invalidate();
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Train Schedule System - Logged Out</title>
+    <meta http-equiv="refresh" content="3;url=login.jsp" />
     <style>
         body {
             background-color: lightblue;
@@ -63,11 +65,8 @@
     <div class="header">
         <h1>Train Schedule System</h1>
     </div>
-    <div class="message-container" style="margin-top: 20px;">
-        <h2>You have been logged out successfully.</h2>
-        <form action="login.jsp" method="get">
-            <button type="submit" class="login-button">Log In Again</button>
-        </form>
+    <div class="message-container">
+        <h2>You have been logged out successfully. Redirecting to login page...</h2>
     </div>
 </body>
 </html>

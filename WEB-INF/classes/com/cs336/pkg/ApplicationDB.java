@@ -19,7 +19,7 @@ public class ApplicationDB {
         Class.forName("com.mysql.jdbc.Driver");
  
         // Establish the connection
-        connection = DriverManager.getConnection(URL, "root", "root");
+        connection = DriverManager.getConnection(URL, "root", "ROOT");
         System.out.println("Database connection established successfully.");
     } catch (ClassNotFoundException e) {
         System.err.println("JDBC Driver not found. Please check if the MySQL Connector JAR is in the WEB-INF/lib folder.");
@@ -28,7 +28,6 @@ public class ApplicationDB {
         System.err.println("Failed to establish database connection. Check your URL, username, and password.");
         e.printStackTrace();
     }
-
     return connection;
 }
 
