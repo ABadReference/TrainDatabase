@@ -223,7 +223,6 @@
                 </tbody>
             </table>
         </div>
-        
         <!-- Footer Section -->
         <div class="footer">
             <form action="userDashboard.jsp" method="get">

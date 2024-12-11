@@ -41,9 +41,6 @@
             border: 1px solid black;
             border-radius: 5px;
         }
-        select, input[type="text"] {
-            width: calc(100% - 20px);
-        }
         button {
             background-color: #007bff;
             color: white;
@@ -75,7 +72,7 @@
         }
         .footer button {
             margin-top: 20px;
-            margin-left: 100px; /* Move the button to the right */
+            margin-left: 100px;
             width: 200px;
         }
     </style>
@@ -88,45 +85,51 @@
             <!-- Left Section -->
             <div class="left-section">
                 <h2>Make a Reservation</h2>
-                <div class="form-group">
-                    <label for="train-route">Train Route:</label>
-                    <select id="train-route" name="trainRoute">
-                        <option value="T001">New Brunswick to Trenton</option>
-                        <option value="T002">Trenton to New York</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="trip-type">Trip Type:</label>
-                    <select id="trip-type" name="tripType">
-                        <option value="one-way">One Way</option>
-                        <option value="round-trip">Round Trip</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="reservation-date">Reservation Date:</label>
-                    <input type="date" id="reservation-date" name="reservationDate" required>
-                </div>
-                <button type="submit">Reserve</button>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="train-route">Train Route:</label>
+                        <select id="train-route" name="trainRoute">
+                            <option value="T001">New Brunswick to Trenton</option>
+                            <option value="T002">Trenton to New York</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trip-type">Trip Type:</label>
+                        <select id="trip-type" name="tripType">
+                            <option value="one-way">One Way</option>
+                            <option value="round-trip">Round Trip</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reservation-date">Reservation Date:</label>
+                        <input type="date" id="reservation-date" name="reservationDate" required>
+                    </div>
+                    <button type="submit" name="action" value="reserve">Reserve</button>
+                </form>
             </div>
 
             <!-- Right Section -->
             <div class="right-section">
                 <h2>Manage Reservation</h2>
-                <div class="form-group">
-                    <label for="discount-type">Discount Type:</label>
-                    <select id="discount-type" name="discountType">
-                        <option value="none">None</option>
-                        <option value="child">Child</option>
-                        <option value="senior">Senior</option>
-                        <option value="disabled">Disabled</option>
-                    </select>
-                    <button type="submit">Apply Discount</button>
-                </div>
-                <div class="form-group">
-                    <label for="reservation-id">Reservation ID:</label>
-                    <input type="text" id="reservation-id" name="reservationId" required>
-                </div>
-                <button type="submit">Cancel Reservation</button>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="discount-type">Discount Type:</label>
+                        <select id="discount-type" name="discountType">
+                            <option value="none">None</option>
+                            <option value="child">Child</option>
+                            <option value="senior">Senior</option>
+                            <option value="disabled">Disabled</option>
+                        </select>
+                    </div>
+                    <button type="submit" name="action" value="applyDiscount">Apply Discount</button>
+                </form>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="reservation-id">Reservation ID:</label>
+                        <input type="text" id="reservation-id" name="reservationId" required>
+                    </div>
+                    <button type="submit" name="action" value="cancel">Cancel Reservation</button>
+                </form>
             </div>
         </div>
 
@@ -144,7 +147,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%-- Dynamic content for current reservations will go here --%>
                     <% 
                         Connection conn = null;
                         PreparedStatement ps = null;
@@ -155,8 +157,9 @@
                                 throw new Exception("Database connection is not available. Please log in again.");
                             }
 
-                            String query = "SELECT r.reservation_id, s.origin, s.destination, r.date, r.trip_type, r.total_fare " +
-                                           "FROM reservations r JOIN schedule s ON r.passenger_id = ?";
+                            String query = "SELECT r.reservation_id, CONCAT(s.origin, ' to ', s.destination) AS route, r.date, r.trip_type, r.total_fare " +
+                                           "FROM reservations r JOIN schedule s ON r.schedule_id = s.schedule_id " +
+                                           "WHERE r.passenger_id = ?";
 
                             ps = conn.prepareStatement(query);
                             ps.setString(1, (String) session.getAttribute("username"));
@@ -164,15 +167,14 @@
 
                             while (rs.next()) {
                                 int reservationId = rs.getInt("reservation_id");
-                                String origin = rs.getString("origin");
-                                String destination = rs.getString("destination");
+                                String route = rs.getString("route");
                                 String date = rs.getString("date");
                                 String tripType = rs.getString("trip_type");
-                                String totalFare = rs.getString("total_fare");
+                                double totalFare = rs.getDouble("total_fare");
                     %>
                     <tr>
                         <td><%= reservationId %></td>
-                        <td><%= origin %> to <%= destination %></td>
+                        <td><%= route %></td>
                         <td><%= date %></td>
                         <td><%= tripType %></td>
                         <td>$<%= totalFare %></td>

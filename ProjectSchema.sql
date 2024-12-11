@@ -122,50 +122,80 @@ CREATE TABLE `goes` (
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- Create `questions_answers` table
-CREATE TABLE `questions_answers` (
-  `question_id` INT NOT NULL AUTO_INCREMENT,
-  `customer_username` VARCHAR(255) NOT NULL,
-  `question` TEXT NOT NULL,
-  `answer` TEXT DEFAULT NULL,
-  `response_date` DATETIME DEFAULT NULL,
-  PRIMARY KEY (`question_id`),
-  FOREIGN KEY (`customer_username`) REFERENCES `customers`(`username`)
-    ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
--- Indexes for performance
-CREATE INDEX idx_train_id ON schedule (`train_id`);
-CREATE INDEX idx_station_id ON goes (`station_id`);
-CREATE INDEX idx_schedule_id ON goes (`schedule_id`);
-CREATE INDEX idx_customer_username ON questions_answers (`customer_username`);
-
--- Insert initial data
+-- Insert data for `trains`
 INSERT INTO trains (TrainID, TransitLineName)
-VALUES ('T001', 'Northeast Corridor'), ('T002', 'Coast Line'), ('T003', 'Hudson Line');
-
-INSERT INTO customers (username, password, fname, lname)
-VALUES ('user1', 'pass1', 'John', 'Doe'), ('admin1', 'pass2', 'Jane', 'Smith'), ('rep1', 'pass3', 'Mike', 'Brown');
-
-INSERT INTO employees (ssn, username, isAdmin, isRep)
-VALUES ('123-45-6789', 'admin1', 1, 0), ('987-65-4321', 'rep1', 0, 1);
+VALUES
+('T001', 'Northeast Corridor Line'),
+('T002', 'North Jersey Coast Line'),
+('T003', 'Raritan Valley Line'); 
 
 INSERT INTO stations (stationID, stationName, state, location, stopNumber, city)
-VALUES ('ST001', 'New Brunswick', 'NJ', '123 Main St', 1, 'New Brunswick'),
-       ('ST002', 'Trenton', 'NJ', '456 State St', 2, 'Trenton');
+VALUES
+-- Northeast Corridor Line
+('ST001', 'Trenton', 'NJ', '456 State St', 1, 'Trenton'),
+('ST002', 'Hamilton', 'NJ', '1 Hamilton Ave', 2, 'Hamilton'),
+('ST003', 'Princeton Junction', 'NJ', '100 Wallace Rd', 3, 'Princeton Junction'),
+('ST004', 'New Brunswick', 'NJ', '123 Main St', 4, 'New Brunswick'),
+('ST005', 'Edison', 'NJ', '1 Central Ave', 5, 'Edison'),
+('ST006', 'Metropark', 'NJ', '60 Wood Ave', 6, 'Iselin'),
+('ST007', 'Rahway', 'NJ', '1 E Milton Ave', 7, 'Rahway'),
+('ST008', 'Elizabeth', 'NJ', 'Broad St & West Grand St', 8, 'Elizabeth'),
+('ST009', 'Newark Penn', 'NJ', '25 Raymond Plaza W', 9, 'Newark'),
+('ST010', 'Secaucus Junction', 'NJ', '675 County Ave', 10, 'Secaucus'),
+('ST011', 'New York Penn', 'NY', '8th Avenue', 11, 'New York'),
+-- North Jersey Coast Line
+('ST012', 'Bay Head', 'NJ', '100 Main St', 12, 'Bay Head'),
+('ST013', 'Point Pleasant Beach', 'NJ', '50 Arnold Ave', 13, 'Point Pleasant Beach'),
+('ST014', 'Belmar', 'NJ', '100 8th Ave', 14, 'Belmar'),
+('ST015', 'Asbury Park', 'NJ', '100 Main St', 15, 'Asbury Park'),
+('ST016', 'Long Branch', 'NJ', '200 Long Branch Ave', 16, 'Long Branch'),
+('ST017', 'Red Bank', 'NJ', '1 Monmouth St', 17, 'Red Bank'),
+('ST018', 'Hazlet', 'NJ', '100 Main St', 18, 'Hazlet'),
+('ST019', 'Perth Amboy', 'NJ', '200 Smith St', 19, 'Perth Amboy'),
+('ST020', 'Woodbridge', 'NJ', '10 Pearl St', 20, 'Woodbridge'),
+-- Raritan Valley Line
+('ST022', 'High Bridge', 'NJ', '100 Bridge St', 22, 'High Bridge'),
+('ST023', 'Annandale', 'NJ', '50 Main St', 23, 'Annandale'),
+('ST024', 'Lebanon', 'NJ', '100 Main St', 24, 'Lebanon'),
+('ST025', 'White House', 'NJ', '123 Main St', 25, 'White House'),
+('ST026', 'Somerville', 'NJ', '1 Main St', 26, 'Somerville'),
+('ST027', 'Bound Brook', 'NJ', '100 Main St', 27, 'Bound Brook'),
+('ST028', 'Plainfield', 'NJ', '200 Front St', 28, 'Plainfield'),
+('ST029', 'Westfield', 'NJ', '1 North Ave', 29, 'Westfield'),
+('ST030', 'Cranford', 'NJ', '1 North Ave', 30, 'Cranford'),
+('ST031', 'Roselle Park', 'NJ', '50 Chestnut St', 31, 'Roselle Park'),
+('ST032', 'Union', 'NJ', '900 Green Ln', 32, 'Union');
+-- Insert data for `schedule`
 
 INSERT INTO schedule (train_id, origin, destination, stop_number, departure_time, arrival_time, fare)
-VALUES ('T001', 'New Brunswick', 'Trenton', 1, '2024-12-10 08:00:00', '2024-12-10 08:45:00', 10.50),
-       ('T002', 'Trenton', 'New York', 2, '2024-12-10 09:00:00', '2024-12-10 10:30:00', 20.75);
+VALUES
+('T001', 'New Brunswick', 'New York Penn', 1, '2024-12-10 08:00:00', '2024-12-10 10:30:00', 20.00);
 
-INSERT INTO reservations (date, passenger_id, total_fare)
-VALUES ('2024-12-09 14:00:00', 'user1', 15.00);
-
-INSERT INTO books (reservation_id, username)
-VALUES (1, 'user1');
-
-INSERT INTO manages (schedule_id, ssn)
-VALUES (1, '987-65-4321');
-
+-- Insert data for `goes`
 INSERT INTO goes (schedule_id, station_id, train_id)
-VALUES (1, 'ST001', 'T001'), (1, 'ST002', 'T001');
+VALUES
+(1, 'ST001', 'T001'),
+(1, 'ST002', 'T001'),
+(1, 'ST003', 'T001'),
+(1, 'ST004', 'T001'),
+(1, 'ST005', 'T001'),
+(1, 'ST006', 'T001'),
+(1, 'ST007', 'T001'),
+(1, 'ST008', 'T001'),
+(1, 'ST009', 'T001'),
+(1, 'ST010', 'T001'),
+(1, 'ST011', 'T001');
+
+-- Insert data for `customers`
+INSERT INTO customers (username, password, fname, lname)
+VALUES
+('user1', 'pass1', 'John', 'Doe'), 
+('user2', 'pass2', 'Alice', 'Smith'), 
+('user3', 'pass3', 'Bob', 'Brown'),
+('admin1', 'adminpass', 'Jane', 'Admin'),
+('rep1', 'reppass', 'Mike', 'Rep');
+
+INSERT INTO employees (ssn, username, isAdmin, isRep)
+VALUES
+('123-45-6789', 'admin1', 1, 0), 
+('987-65-4321', 'rep1', 0, 1);   Hen

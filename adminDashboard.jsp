@@ -1,5 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
 <%
     if (session.getAttribute("user") == null) {
 %>
@@ -30,7 +28,8 @@
     } else {
         String username = (String) session.getAttribute("user");
         String firstName = (String) session.getAttribute("Fname");
-        boolean isAdmin = (boolean) session.getAttribute("isAdmin")
+        Boolean isAdminAttr = (Boolean) session.getAttribute("isAdmin"); // Use Boolean wrapper to check for null
+        boolean isAdmin = (isAdminAttr != null && isAdminAttr); // Safely assign a value
 %>
 <!DOCTYPE html>
 <html>
@@ -94,47 +93,22 @@
     </style>
 </head>
 <body>
-<% if (isAdmin) { %>
     <h1>Train Schedule System</h1>
     <div class="content" id="rcorner">
-        <p><b>Welcome, <%= firstName %><b></p>
+        <p><b>Welcome, <%= firstName %></b></p>
         <div class="button">
-            <a href="editSchedule.jsp">Edit Customer Representative</a>
+            <a href="editReps.jsp">Edit Customer Representative</a>
         </div>
         <div class="button">
-            <a href="customerQueries.jsp">Review Customer Queries</a>
+            <a href="salesReport.jsp">Sales Report</a>
         </div>
         <div class="button">
-            <a href="viewTrains.jsp">View Train Schedule</a>
+            <a href="adminRes.jsp">View Reservations</a>
         </div>
         <div class="button">
-            <a href="customerReservations.jsp">View Reservations</a>
-        </div>
-        <div class="button">
-            <b href="logout.jsp">Log Out</b>
+            <a href="logout.jsp">Log Out</a>
         </div>
     </div>
-<% } else { %>
-    <h1>Train Schedule System</h1>
-    <div class="content" id="rcorner">
-        <p><b>Welcome, <%= firstName %><b></p>
-        <div class="button">
-            <a href="editSchedule.jsp">Edit Train Schedule</a>
-        </div>
-        <div class="button">
-            <a href="customerQueries.jsp">Review Customer Queries</a>
-        </div>
-        <div class="button">
-            <a href="viewTrains.jsp">View Train Schedule</a>
-        </div>
-        <div class="button">
-            <a href="customerReservations.jsp">View Reservations</a>
-        </div>
-        <div class="button">
-            <b href="logout.jsp">Log Out</b>
-        </div>
-    </div>
-    <% } %>
 </body>
 </html>
 <%

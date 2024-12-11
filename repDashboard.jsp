@@ -97,19 +97,16 @@
     <div class="content" id="rcorner">
         <p><b>Welcome, <%= firstName %><b></p>
         <div class="button">
-            <a href="editSchedule.jsp">Edit Train Schedule</a>
-        </div>
-        <div class="button">
             <a href="customerQueries.jsp">Review Customer Queries</a>
         </div>
         <div class="button">
-            <a href="viewTrains.jsp">View Train Schedule</a>
+            <a href="modTrains.jsp">View Train Schedule</a>
         </div>
         <div class="button">
-            <a href="customerReservations.jsp">View Reservations</a>
+            <a href="repRes.jsp">View Reservations</a>
         </div>
         <div class="button">
-            <b href="logout.jsp">Log Out</b>
+            <a href="logout.jsp">Log Out</a>
         </div>
     </div>
 </body>
