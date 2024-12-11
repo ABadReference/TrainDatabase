@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
     <style>
@@ -85,7 +84,7 @@
             <!-- Left Section -->
             <div class="left-section">
                 <h2>Make a Reservation</h2>
-                <form method="post">
+                <form action="handleReservation.jsp" method="post"> 
                     <div class="form-group">
                         <label for="train-route">Train Route:</label>
                         <select id="train-route" name="trainRoute">
@@ -104,13 +103,14 @@
                         <label for="reservation-date">Reservation Date:</label>
                         <input type="date" id="reservation-date" name="reservationDate" required>
                     </div>
-                    <button type="submit" name="action" value="reserve">Reserve</button>
+                    <button type="submit">Reserve</button>
                 </form>
             </div>
 
             <!-- Right Section -->
             <div class="right-section">
                 <h2>Manage Reservation</h2>
+                <!-- Existing management logic stays here -->
                 <form method="post">
                     <div class="form-group">
                         <label for="discount-type">Discount Type:</label>
@@ -131,65 +131,6 @@
                     <button type="submit" name="action" value="cancel">Cancel Reservation</button>
                 </form>
             </div>
-        </div>
-
-        <!-- Current Reservations -->
-        <div class="container">
-            <h2>Current Reservations</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Reservation ID</th>
-                        <th>Train Route</th>
-                        <th>Date</th>
-                        <th>Trip Type</th>
-                        <th>Total Fare</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                        Connection conn = null;
-                        PreparedStatement ps = null;
-                        ResultSet rs = null;
-                        try {
-                            conn = (Connection) session.getAttribute("dbConnection");
-                            if (conn == null || conn.isClosed()) {
-                                throw new Exception("Database connection is not available. Please log in again.");
-                            }
-
-                            String query = "SELECT r.reservation_id, CONCAT(s.origin, ' to ', s.destination) AS route, r.date, r.trip_type, r.total_fare " +
-                                           "FROM reservations r JOIN schedule s ON r.schedule_id = s.schedule_id " +
-                                           "WHERE r.passenger_id = ?";
-
-                            ps = conn.prepareStatement(query);
-                            ps.setString(1, (String) session.getAttribute("username"));
-                            rs = ps.executeQuery();
-
-                            while (rs.next()) {
-                                int reservationId = rs.getInt("reservation_id");
-                                String route = rs.getString("route");
-                                String date = rs.getString("date");
-                                String tripType = rs.getString("trip_type");
-                                double totalFare = rs.getDouble("total_fare");
-                    %>
-                    <tr>
-                        <td><%= reservationId %></td>
-                        <td><%= route %></td>
-                        <td><%= date %></td>
-                        <td><%= tripType %></td>
-                        <td>$<%= totalFare %></td>
-                    </tr>
-                    <% 
-                            }
-                        } catch (Exception e) {
-                            out.println("<tr><td colspan='5'>Error: " + e.getMessage() + "</td></tr>");
-                        } finally {
-                            if (rs != null) rs.close();
-                            if (ps != null) ps.close();
-                        }
-                    %>
-                </tbody>
-            </table>
         </div>
 
         <!-- Footer Section -->

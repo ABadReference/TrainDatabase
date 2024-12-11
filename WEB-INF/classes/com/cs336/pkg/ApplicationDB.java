@@ -2,7 +2,6 @@
 package com.cs336.pkg;
 
 import java.sql.Connection;
-// import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -17,9 +16,9 @@ public class ApplicationDB {
     try {
         // Use the old driver class for MySQL Connector 5.1.49
         Class.forName("com.mysql.jdbc.Driver");
- 
+
         // Establish the connection
-        connection = DriverManager.getConnection(URL, "root", "ROOT");
+        connection = DriverManager.getConnection(URL, "root", "root");
         System.out.println("Database connection established successfully.");
     } catch (ClassNotFoundException e) {
         System.err.println("JDBC Driver not found. Please check if the MySQL Connector JAR is in the WEB-INF/lib folder.");

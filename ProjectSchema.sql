@@ -1,3 +1,5 @@
+use cs336project;
+
 -- Disable foreign key checks
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -75,16 +77,16 @@ CREATE TABLE `schedule` (
 -- Create `reservations` table
 CREATE TABLE `reservations` (
   `reservation_id` int NOT NULL AUTO_INCREMENT,
-  `date` datetime NOT NULL,
+  `schedule_id` int NOT NULL,
   `passenger_id` varchar(255) NOT NULL,
+  `date` date NOT NULL,
+  `trip_type` varchar(50) NOT NULL,
   `total_fare` decimal(10,2) NOT NULL,
-  `trip_type` ENUM('one-way', 'round-trip') DEFAULT 'one-way',
-  `discount_type` ENUM('child', 'senior', 'disabled', 'none') DEFAULT 'none',
   PRIMARY KEY (`reservation_id`),
-  FOREIGN KEY (`passenger_id`) REFERENCES `customers`(`username`)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  CHECK (`total_fare` >= 0)
+  FOREIGN KEY (`schedule_id`) REFERENCES `schedule`(`schedule_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`passenger_id`) REFERENCES `customers`(`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
 
 -- Create `books` table
 CREATE TABLE `books` (
@@ -198,4 +200,9 @@ VALUES
 INSERT INTO employees (ssn, username, isAdmin, isRep)
 VALUES
 ('123-45-6789', 'admin1', 1, 0), 
-('987-65-4321', 'rep1', 0, 1);   Hen
+('987-65-4321', 'rep1', 0, 1);  
+
+select * from employees;
+select * from schedule;
+select * from reservations;
+

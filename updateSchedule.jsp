@@ -13,19 +13,27 @@
         throw new IllegalArgumentException("Arrival time or fare is missing or invalid.");
     }
 
-    try (Connection conn = (Connection) session.getAttribute("dbConnection")) {
+    Connection conn = null;
+    PreparedStatement ps = null;
+
+    try {
+        conn = (Connection) session.getAttribute("dbConnection");
         if (conn == null || conn.isClosed()) {
             throw new SQLException("Database connection is not available.");
         }
+
         String updateQuery = "UPDATE schedule SET arrival_time = ?, fare = ? WHERE schedule_id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
-            ps.setString(1, "2024-12-10 " + arrival_time + ":00");
-            ps.setBigDecimal(2, new BigDecimal(fare));
-            ps.setInt(3, schedule_id);
-            ps.executeUpdate();
-        }
+        ps = conn.prepareStatement(updateQuery);
+        ps.setString(1, "2024-12-10 " + arrival_time + ":00");
+        ps.setBigDecimal(2, new BigDecimal(fare));
+        ps.setInt(3, schedule_id);
+        ps.executeUpdate();
+
         response.sendRedirect("modTrains.jsp");
     } catch (SQLException e) {
         out.println("Error updating schedule: " + e.getMessage());
+    } finally {
+        if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+        // Do not close `conn` because it is shared in the session.
     }
 %>

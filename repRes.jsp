@@ -59,9 +59,9 @@
                 <label for="transit-line">Transit Line:</label>
                 <select id="transit-line" name="transitLine">
                     <option value="">Select Transit Line</option>
-                    <option value="Northeast Corridor">Northeast Corridor</option>
-                    <option value="Coast Line">Coast Line</option>
-                    <option value="Hudson Line">Hudson Line</option>
+                    <option value="Northeast Corridor Line">Northeast Corridor Line</option>
+                    <option value="North Jersey Coast Line">North Jersey Coast Line</option>
+                    <option value="Raritan Valley Line">Raritan Valley Line</option>
                 </select>
             </div>
             <div class="form-group">
@@ -77,9 +77,10 @@
                 <tr>
                     <th>Customer Name</th>
                     <th>Email</th>
-                    <th>Phone</th>
                     <th>Transit Line</th>
                     <th>Reservation Date</th>
+                    <th>Trip Type</th>
+                    <th>Discount</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,12 +98,13 @@
                             throw new Exception("Database connection is not available. Please log in again.");
                         }
 
-                        String query = "SELECT CONCAT(c.fname, ' ', c.lname) AS customer_name, c.username AS email, '' AS phone, " +
-                                       "t.TransitLineName, r.date " +
+                        String query = "SELECT CONCAT(c.fname, ' ', c.lname) AS customer_name, " +
+                                       "c.username AS email, t.TransitLineName, r.date, " +
+                                       "r.trip_type, r.discount_type " +
                                        "FROM reservations r " +
                                        "JOIN customers c ON r.passenger_id = c.username " +
-                                       "JOIN schedule s ON r.schedule_id = s.schedule_id " +
-                                       "JOIN trains t ON s.train_id = t.TrainID WHERE 1=1 ";
+                                       "JOIN trains t ON t.TrainID IN (SELECT train_id FROM schedule WHERE schedule.schedule_id = r.reservation_id) " +
+                                       "WHERE 1=1 ";
 
                         if (transitLine != null && !transitLine.isEmpty()) {
                             query += "AND t.TransitLineName = ? ";
@@ -125,21 +127,23 @@
                         while (rs.next()) {
                             String customerName = rs.getString("customer_name");
                             String email = rs.getString("email");
-                            String phone = rs.getString("phone");
                             String lineName = rs.getString("TransitLineName");
                             String date = rs.getString("date");
+                            String tripType = rs.getString("trip_type");
+                            String discount = rs.getString("discount_type");
                 %>
                 <tr>
                     <td><%= customerName %></td>
                     <td><%= email %></td>
-                    <td><%= phone %></td>
                     <td><%= lineName %></td>
                     <td><%= date %></td>
+                    <td><%= tripType %></td>
+                    <td><%= discount %></td>
                 </tr>
                 <% 
                         }
                     } catch (Exception e) {
-                        out.println("<tr><td colspan='5'>Error: " + e.getMessage() + "</td></tr>");
+                        out.println("<tr><td colspan='6'>Error: " + e.getMessage() + "</td></tr>");
                     } finally {
                         if (rs != null) rs.close();
                         if (ps != null) ps.close();
@@ -147,6 +151,10 @@
                 %>
             </tbody>
         </table>
+        <form action="repDashboard.jsp" method="get" style="margin-top: 20px;">
+    <button type="submit" class="button" style="background-color: gray;">Back</button>
+</form>
+
     </div>
 </body>
 </html>
